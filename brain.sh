@@ -44,7 +44,7 @@ On_White='\033[47m'       # White
 #echo -e "║░▒▒▒༎༎༎༎║╔══╬══╩═╗╝╝═╗║ ╚═╝╠╩╬╞┤ ║╛╘ ╝▒▒▒▒░║"
 #echo -e "║╔═══╩═╗╝╝═╗║ ╚═╝╠╩╬╞┤ ║╛╘ ╝░░░░░░░░░░░░║"
 
-prerequisites=("git" "curl" "docker" "docker-compose" "go" "node" "npm" "python" "screen")
+prerequisites=("git" "curl" "docker" "docker-compose" "go" "python" "node" "npm" "screen")
 missing=()
 echo -e $BPurple
 
@@ -83,27 +83,61 @@ do
             $i --version
         fi
     fi
+    echo -e $Color_Off
 done
 
 if [ -n "$missing" ]
 then
-    echo -e $Red
-    echo "You are missing ${missing[*]}"
-    echo "would you like to install now?"
-    read -r -p "Are you sure? [y/N] " response
+    echo -e $BRed
+    echo "You are missing the following dependencies:" 
+    
+        for i in ${missing[@]}
+        do
+            echo "${missing[*]}"
+        done
+        
+    read -r -p "would you like to install now? [y/N] " response
+    echo -e $Color_Off
+    
     if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
     then
         for i in ${missing[@]}
         do
             echo "installing $i"
             case $i in 
+                node)
+                    curl -sL https://deb.nodesource.com/setup_13.x | sudo bash -
+                    apt-get install nodejs
+                ;;
+                npm)
+                    echo "NPM INSTALLED NOW"
+                ;;
+                docker)
+                    apt-get update
+                    apt-get install \
+                    apt-transport-https \
+                    ca-certificates \
+                    curl \
+                    gnupg2 \
+                    software-properties-common
+                    
+                    add-apt-repository \
+                    "deb [arch=amd64] https://download.docker.com/linux/debian \
+                    $(lsb_release -cs) \
+                    stable"
+                    apt-get update
+                    apt-get install docker-ce docker-ce-cli containerd.io
+                ;;
                 go)
                     wget https://dl.google.com/go/go1.14.1.linux-amd64.tar.gz
                     tar -C /usr/local -xzf go1.14.1.linux-amd64.tar
                     echo 'export PATH=$PATH:/usr/local/go/bin' >> /etc/profile
                     echo 'export GOPATH=$HOME/go' >> /etc/profile
+                    source ~/.profile
+
                 ;;
                 *)
+                    apt-get update
                     sudo apt-get install $i
                 ;;
             esac
