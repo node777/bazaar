@@ -76,7 +76,7 @@ do
         echo -e $Green
         echo -e "$i is installed."
 
-        if [[ $i == "go" ]]
+        if [ $i == "go" ]
         then
             $i version
         else
@@ -97,8 +97,11 @@ then
         do
             echo "installing $i"
             case $i in 
-                screen)
-                    echo "Installing"
+                go)
+                    wget https://dl.google.com/go/go1.14.1.linux-amd64.tar.gz
+                    tar -C /usr/local -xzf go1.14.1.linux-amd64.tar
+                    echo 'export PATH=$PATH:/usr/local/go/bin' >> /etc/profile
+                    echo 'export GOPATH=$HOME/go' >> /etc/profile
                 ;;
                 *)
                     sudo apt-get install $i
@@ -115,3 +118,4 @@ else
 fi
 
 echo "setting up environment"
+git clone https://github.com/hyperledger/fabric-samples
