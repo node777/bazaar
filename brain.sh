@@ -44,16 +44,16 @@ On_White='\033[47m'       # White
 #echo -e "║░▒▒▒༎༎༎༎║╔══╬══╩═╗╝╝═╗║ ╚═╝╠╩╬╞┤ ║╛╘ ╝▒▒▒▒░║"
 #echo -e "║╔═══╩═╗╝╝═╗║ ╚═╝╠╩╬╞┤ ║╛╘ ╝░░░░░░░░░░░░║"
 
-prerequisites=("git" "curl" "docker" "docker-compose" "go" "python" "node" "npm" "screen")
+prerequisites=("apt-transport-https" "ca-certificates" "software-properties-common" "git" "curl" "docker" "docker-compose" "go" "python" "node" "npm")
 missing=()
 echo -e $BPurple
 
-echo -e " ╔══════════════════⚪══════════════════╗ "
-echo -e "╔╝░░░░░░░░░░░⚪⚪⚪⚪⚪ᘕ ❖ ᘔ⚪⚪⚪⚪⚪░░░░░░░░░░░╚╗"
+echo -e " ╔══════════════════○══════════════════╗ "
+echo -e "╔╝░░░░░░░░░░░○○○○○x ❖ x○○○○○░░░░░░░░░░░╚╗"
 echo -e "║░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░║"
-echo -e "║░▒▒░ᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒ ░▒▒░║"
-echo -e "║░▒░⌗⌗ Initializing Bazaar Network ⌗⌗░▒░║"
-echo -e "║░▒▒░ᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒᨒ ░▒▒░║"
+echo -e "║░▒▒░○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○░▒▒░║"
+echo -e "║░▒░○○ Initializing Bazaar Network ○○░▒░║"
+echo -e "║░▒▒░○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○░▒▒░║"
 echo -e "║░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░║"
 echo -e "╚╗░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░╔╝"
 echo -e " ╚══════════════════⚪══════════════════╝ "
@@ -95,7 +95,7 @@ then
         do
             echo "${missing[*]}"
         done
-        
+
     read -r -p "would you like to install now? [y/N] " response
     echo -e $Color_Off
     
@@ -109,31 +109,40 @@ then
                     curl -sL https://deb.nodesource.com/setup_13.x | sudo bash -
                     apt-get install nodejs
                 ;;
-                npm)
-                    echo "NPM INSTALLED NOW"
-                ;;
                 docker)
-                    apt-get update
-                    apt-get install \
-                    apt-transport-https \
-                    ca-certificates \
-                    curl \
-                    gnupg2 \
-                    software-properties-common
+                    #apt-get update
+                    #apt-get install \
+                    #apt-transport-https \
+                    #ca-certificates \
+                    #curl \
+                    #gnupg2 \
+                    #software-properties-common
                     
-                    add-apt-repository \
-                    "deb [arch=amd64] https://download.docker.com/linux/debian \
-                    $(lsb_release -cs) \
-                    stable"
-                    apt-get update
-                    apt-get install docker-ce docker-ce-cli containerd.io
+                    #add-apt-repository \
+                    #"deb [arch=amd64] https://download.docker.com/linux/debian \
+                    #$(lsb_release -cs) \
+                    #stable"
+                    #apt-get update
+                    #apt-get install docker-ce docker-ce-cli containerd.io
+
+                    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+                    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+                    sudo apt update
+                    sudo apt-get install docker-ce
+
+                    sudo curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+                    sudo chmod +x /usr/local/bin/docker-compose
+
+                    # add yourself to the docker group and re-login
+                    sudo usermod -aG docker ${USER}
                 ;;
                 go)
-                    wget https://dl.google.com/go/go1.14.1.linux-amd64.tar.gz
-                    tar -C /usr/local -xzf go1.14.1.linux-amd64.tar
-                    echo 'export PATH=$PATH:/usr/local/go/bin' >> /etc/profile
-                    echo 'export GOPATH=$HOME/go' >> /etc/profile
-                    source ~/.profile
+                    #wget https://dl.google.com/go/go1.14.1.linux-amd64.tar.gz
+                    #tar -C /usr/local -xzf go1.14.1.linux-amd64.tar
+                    apt install golang-go
+                    #echo 'export PATH=$PATH:/usr/local/go/bin' >> /etc/profile
+                    #echo 'export GOPATH=$HOME/go' >> /etc/profile
+                    #source ~/.profile
 
                 ;;
                 *)
@@ -151,5 +160,17 @@ else
     echo "Not missing any prerequisites. Continuing with Install"
 fi
 
-echo "setting up environment"
-git clone https://github.com/hyperledger/fabric-samples
+echo -e $BYellow
+read -r -p "would you like to set up environment? [y/N] " response
+echo -e $Color_Off
+
+if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
+then
+    echo "setting up environment..."
+    git clone https://github.com/olegabu/fabric-starter
+    cd fabric-starter
+    ./network-create-local.sh org1 org2 org3
+fi
+
+#curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/master/scripts/bootstrap.sh | bash
+#go get github.com/hyperledger/fabric-chaincode-go/shim
