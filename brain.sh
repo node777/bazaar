@@ -1,3 +1,4 @@
+DEFAULT_ANCHOR = "34.66.246.55"
 # Reset
 Color_Off='\033[0m'       # Text Reset
 
@@ -93,10 +94,10 @@ then
     
         for i in ${missing[@]}
         do
-            echo "${missing[$i]}"
+            echo "${missing[${i}]}"
         done
 
-    read -r -p "would you like to install now? [y/N] " response
+    read -r -p "would you like to install as anchor? [y/N] " response
     echo -e $Color_Off
     
     if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
@@ -170,6 +171,12 @@ then
     git clone https://github.com/olegabu/fabric-starter
     cd fabric-starter
     ./network-create-local.sh org1 org2 org3
+else
+    read -e -p "Enter anchor IP:" -i "$DEFAULT_ANCHOR" ANCHOR_IP
+    git clone https://github.com/olegabu/fabric-starter
+    cd fabric-starter
+    export BOOTSTRAP_IP=$ANCHOR_IP
+    ./network-create-local.sh test-org
 fi
 
 #curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/master/scripts/bootstrap.sh | bash
