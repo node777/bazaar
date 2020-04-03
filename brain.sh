@@ -1,4 +1,4 @@
-DEFAULT_ANCHOR = "34.66.246.55"
+DEFAULT_ANCHOR = '34.66.246.55'
 # Reset
 Color_Off='\033[0m'       # Text Reset
 
@@ -162,22 +162,26 @@ else
 fi
 
 echo -e $BYellow
-read -r -p "would you like to set up environment? [y/N] " response
+read -r -p "would you like to set up environment now? [y/N] " response
 echo -e $Color_Off
-
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
 then
-    echo "setting up environment..."
-    git clone https://github.com/olegabu/fabric-starter
-    cd fabric-starter
-    ./network-create-local.sh org1 org2 org3
-else
-    read -e -p "Enter anchor IP:" -i "$DEFAULT_ANCHOR" ANCHOR_IP
-    git clone https://github.com/olegabu/fabric-starter
-    cd fabric-starter
-    export BOOTSTRAP_IP=$ANCHOR_IP
-    ./network-create-local.sh test-org
-fi
+    read -r -p "would you like to set up environment as anchor peer? [y/N] " response
 
+    if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
+    then
+        read -r -p "Please enter the orgs you would like to set up, seperated by a space. [y/N] " orgList
+        echo "setting up environment..."
+        git clone https://github.com/olegabu/fabric-starter
+        cd fabric-starter
+        ./network-create-local.sh $orgList
+    else
+        read -e -p "Enter anchor IP:" -i "34.66.246.55" ANCHOR_IP
+        git clone https://github.com/olegabu/fabric-starter
+        cd fabric-starter
+        export BOOTSTRAP_IP='34.66.246.55'
+        ./network-create.sh test-org
+    fi
+fi
 #curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/master/scripts/bootstrap.sh | bash
 #go get github.com/hyperledger/fabric-chaincode-go/shim
