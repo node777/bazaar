@@ -45,7 +45,8 @@ On_White='\033[47m'       # White
 #echo -e "║░▒▒▒༎༎༎༎║╔══╬══╩═╗╝╝═╗║ ╚═╝╠╩╬╞┤ ║╛╘ ╝▒▒▒▒░║"
 #echo -e "║╔═══╩═╗╝╝═╗║ ╚═╝╠╩╬╞┤ ║╛╘ ╝░░░░░░░░░░░░║"
 
-prerequisites=("apt-transport-https" "ca-certificates" "software-properties-common" "git" "curl" "docker" "docker-compose" "go" "python" "node" "npm")
+#OLD-prerequisites=("apt-transport-https" "ca-certificates" "software-properties-common" "git" "curl" "docker" "docker-compose" "go" "python" "node" "npm")
+prerequisites=("apt-transport-https" "ca-certificates" "software-properties-common" "git" "curl" "docker")
 missing=()
 echo -e $BPurple
 
@@ -94,7 +95,7 @@ then
     
         for i in ${missing[@]}
         do
-            echo "${missing[${i}]}"
+            echo "$missing[$i]"
         done
 
     read -r -p "would you like to install as anchor? [y/N] " response
@@ -106,10 +107,10 @@ then
         do
             echo "installing $i"
             case $i in 
-                node)
-                    curl -sL https://deb.nodesource.com/setup_13.x | sudo bash -
-                    apt-get install nodejs
-                ;;
+                #node)
+                #    curl -sL https://deb.nodesource.com/setup_13.x | sudo bash -
+                #    apt-get install nodejs
+                #;;
                 docker)
                     #apt-get update
                     #apt-get install \
@@ -137,15 +138,15 @@ then
                     # add yourself to the docker group and re-login
                     usermod -aG docker ${USER}
                 ;;
-                go)
+                #go)
                     #wget https://dl.google.com/go/go1.14.1.linux-amd64.tar.gz
                     #tar -C /usr/local -xzf go1.14.1.linux-amd64.tar
-                    apt install golang-go
+                    #apt install golang-go
                     #echo 'export PATH=$PATH:/usr/local/go/bin' >> /etc/profile
                     #echo 'export GOPATH=$HOME/go' >> /etc/profile
                     #source ~/.profile
-
-                ;;
+                #
+                #;;
                 *)
                     apt-get update
                     sudo apt-get install $i
@@ -170,15 +171,15 @@ then
 
     if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
     then
-        read -r -p "Please enter the orgs you would like to set up, seperated by a space. [y/N] " orgList
+        read -r -p "Please enter the orgs you would like to set up, seperated by a space: " orgList
         echo "setting up environment..."
-        git clone https://github.com/olegabu/fabric-starter
-        cd fabric-starter
+        git clone https://github.com/traplizard/bazaar-core
+        cd bazaar-core
         ./network-create-local.sh $orgList
     else
-        read -e -p "Enter anchor IP:" -i "34.66.246.55" ANCHOR_IP
-        git clone https://github.com/olegabu/fabric-starter
-        cd fabric-starter
+        read -e -p "Enter anchor IP: " -i "34.66.246.55" ANCHOR_IP
+        git clone https://github.com/traplizard/bazaar-core
+        cd bazaar-core
         export BOOTSTRAP_IP='34.66.246.55'
         ./network-create.sh test-org
     fi
