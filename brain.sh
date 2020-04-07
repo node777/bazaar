@@ -107,26 +107,8 @@ then
         do
             echo "installing $i"
             case $i in 
-                #node)
-                #    curl -sL https://deb.nodesource.com/setup_13.x | sudo bash -
-                #    apt-get install nodejs
-                #;;
                 docker)
-                    #apt-get update
-                    #apt-get install \
-                    #apt-transport-https \
-                    #ca-certificates \
-                    #curl \
-                    #gnupg2 \
-                    #software-properties-common
-                    
-                    #add-apt-repository \
-                    #"deb [arch=amd64] https://download.docker.com/linux/debian \
-                    #$(lsb_release -cs) \
-                    #stable"
-                    #apt-get update
-                    #apt-get install docker-ce docker-ce-cli containerd.io
-
+                    apt update
                     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
                     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
                     apt update
@@ -135,18 +117,8 @@ then
                     curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
                     chmod +x /usr/local/bin/docker-compose
 
-                    # add yourself to the docker group and re-login
                     usermod -aG docker ${USER}
                 ;;
-                #go)
-                    #wget https://dl.google.com/go/go1.14.1.linux-amd64.tar.gz
-                    #tar -C /usr/local -xzf go1.14.1.linux-amd64.tar
-                    #apt install golang-go
-                    #echo 'export PATH=$PATH:/usr/local/go/bin' >> /etc/profile
-                    #echo 'export GOPATH=$HOME/go' >> /etc/profile
-                    #source ~/.profile
-                #
-                #;;
                 *)
                     apt-get update
                     sudo apt-get install $i
@@ -175,7 +147,10 @@ then
         echo "setting up environment..."
         git clone https://github.com/traplizard/bazaar-core
         cd bazaar-core
-        ./network-create-local.sh $orgList
+        #start reg
+        ./extra/docker-registry-local/start-docker-registry-local.sh
+        #
+        ./host-create.sh $orgList
     else
         read -e -p "Enter anchor IP: " -i "34.66.246.55" ANCHOR_IP
         git clone https://github.com/traplizard/bazaar-core
